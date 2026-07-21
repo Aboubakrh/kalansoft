@@ -106,10 +106,10 @@
         <div class="p-6">
             <!-- Priority Action -->
             <div class="mb-8">
-                <button class="w-full bg-primary text-on-primary py-4 rounded-xl font-title-md hover:opacity-90 transition-opacity shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2">
+                <a href="{{ route('professeur.presences') }}" class="w-full bg-primary text-on-primary py-4 rounded-xl font-title-md hover:opacity-90 transition-opacity shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2">
                     <flux:icon.clipboard-document-check class="size-6" />
                     Faire l'appel
-                </button>
+                </a>
             </div>
 
             <!-- Classes principales -->

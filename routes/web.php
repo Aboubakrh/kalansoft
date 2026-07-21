@@ -69,16 +69,26 @@ Route::middleware(['auth', 'verified', 'role:professeur'])->group(function () {
     Route::get('professeur/dashboard', \App\Livewire\Professeur\Dashboard::class)->name('professeur.dashboard');
     Route::get('professeur/emploi-du-temps', \App\Livewire\Professeur\EmploiDuTemps::class)->name('professeur.emploi-du-temps');
     Route::get('professeur/cahier-texte', \App\Livewire\Professeur\CahierTexte::class)->name('professeur.cahier-texte');
+    Route::get('professeur/presences', \App\Livewire\Professeur\Presence::class)->name('professeur.presences');
 });
 
 // Parent
 Route::middleware(['auth', 'verified', 'role:parent'])->group(function () {
-    Route::view('parent/dashboard', 'parent.dashboard')->name('parent.dashboard');
+    Route::get('parent/dashboard', \App\Livewire\Parent\Dashboard::class)->name('parent.dashboard');
+    Route::get('parent/dossier-scolaire', \App\Livewire\Parent\DossierScolaire::class)->name('parent.dossier-scolaire');
+    Route::get('parent/emploi-du-temps', \App\Livewire\Parent\EmploiDuTemps::class)->name('parent.emploi-du-temps');
+    Route::get('parent/bulletins-notes', \App\Livewire\Parent\Bulletin::class)->name('parent.bulletins-notes');
+    Route::get('parent/paiements', \App\Livewire\Parent\Paiement::class)->name('parent.paiements');
+    Route::get('parent/bulletins/{inscription}/download/{periode}', [\App\Http\Controllers\Pedagogy\BulletinController::class, 'download'])->name('parent.bulletins.download');
 });
 
 // Eleve
 Route::middleware(['auth', 'verified', 'role:eleve'])->group(function () {
-    Route::view('eleve/dashboard', 'eleve.dashboard')->name('eleve.dashboard');
+    Route::get('eleve/dashboard', \App\Livewire\Eleve\Dashboard::class)->name('eleve.dashboard');
+    Route::get('eleve/notes', \App\Livewire\Eleve\Notes::class)->name('eleve.notes');
+    Route::get('eleve/emploi-du-temps', \App\Livewire\Eleve\EmploiDuTemps::class)->name('eleve.emploi-du-temps');
+    Route::get('eleve/cahier-texte', \App\Livewire\Eleve\CahierTexte::class)->name('eleve.cahier-texte');
+    Route::get('eleve/absences', \App\Livewire\Eleve\Absences::class)->name('eleve.absences');
 });
 
 require __DIR__.'/settings.php';
