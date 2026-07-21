@@ -17,6 +17,8 @@ class Presence extends Model
 
     public function eleves(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(\App\Models\Core\Eleve::class, 'presence_eleves', 'presence_id', 'eleve_id')->withPivot('statut')->withTimestamps();
+        return $this->belongsToMany(\App\Models\Core\Eleve::class, 'presence_eleves', 'presence_id', 'eleve_id')
+            ->withPivot(['statut', 'observation'])
+            ->withTimestamps();
     }
 }
