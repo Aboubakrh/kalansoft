@@ -14,7 +14,7 @@
 <body class="min-h-screen bg-background text-on-surface antialiased font-sans flex overflow-hidden">
     
     <!-- Sidebar -->
-    <flux:sidebar stashable class="bg-surface-container-lowest border-r border-surface-variant">
+    <flux:sidebar stashable class="bg-surface-container-lowest border-r border-surface-variant overflow-y-auto flex flex-col h-screen">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
         <a href="{{ route('dashboard') }}" class="flex items-center px-2 pb-4 mb-2" data-flux-brand>

@@ -87,62 +87,84 @@
             </div>
         </div>
 
-        <!-- Middle Section: Charts -->
+        <!-- Middle Section: Analytics & Breakdown -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            <div class="lg:col-span-2">
-                <flux:card class="h-full p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <flux:heading size="lg">Évolution des Inscriptions et Recettes</flux:heading>
-                        <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" />
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Modes de Paiement breakdown -->
+                <flux:card class="p-6">
+                    <div class="flex justify-between items-center mb-4 pb-3 border-b border-surface-variant">
+                        <flux:heading size="lg">Répartition des Encaissements par Mode de Paiement</flux:heading>
+                        <flux:badge color="zinc">Finances</flux:badge>
                     </div>
-                    <div class="w-full h-64 bg-surface-container-lowest border border-surface-variant rounded-lg relative overflow-hidden flex items-end">
-                        <div class="absolute inset-0 grid grid-cols-6 gap-0 opacity-10">
-                            <div class="border-r border-outline-variant"></div><div class="border-r border-outline-variant"></div><div class="border-r border-outline-variant"></div><div class="border-r border-outline-variant"></div><div class="border-r border-outline-variant"></div>
+                    
+                    @if(empty($modesPaiement) || $modesPaiement->isEmpty())
+                        <p class="text-secondary text-sm text-center py-6">Aucun paiement enregistré pour le moment.</p>
+                    @else
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            @foreach($modesPaiement as $mode => $total)
+                                <div class="p-4 bg-surface-container-low rounded-xl border border-surface-variant">
+                                    <span class="text-xs font-bold text-secondary uppercase">{{ $mode ?: 'Non spécifié' }}</span>
+                                    <div class="text-xl font-bold text-primary mt-2">
+                                        {{ number_format((float)$total, 0, ',', ' ') }} <span class="text-xs font-normal">FCFA</span>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="absolute inset-0 flex flex-col justify-between opacity-10">
-                            <div class="border-b border-outline-variant"></div><div class="border-b border-outline-variant"></div><div class="border-b border-outline-variant"></div><div class="border-b border-outline-variant"></div>
-                        </div>
-                        <div class="w-full h-full relative" style="background: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(255,255,255,0) 100%);">
-                            <svg class="absolute w-full h-full bottom-0 left-0" preserveAspectRatio="none" viewBox="0 0 1000 300">
-                                <path d="M0,250 C150,250 250,150 400,180 C550,210 650,50 800,90 C900,120 1000,40 1000,40 L1000,300 L0,300 Z" fill="rgba(0,0,0,0.03)" stroke="currentColor" stroke-linejoin="round" stroke-width="2" class="text-primary"></path>
-                            </svg>
-                        </div>
+                    @endif
+                </flux:card>
+
+                <!-- Top Classes -->
+                <flux:card class="p-6">
+                    <div class="flex justify-between items-center mb-4 pb-3 border-b border-surface-variant">
+                        <flux:heading size="lg">Effectifs par Classe</flux:heading>
+                        <flux:link href="{{ route('admin.classes.index') }}" class="text-xs">Toutes les classes</flux:link>
+                    </div>
+
+                    <div class="space-y-3">
+                        @forelse($topClasses ?? [] as $cls)
+                            <div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg border border-surface-variant">
+                                <div>
+                                    <span class="font-bold text-primary">{{ $cls->nom }}</span>
+                                    <span class="block text-xs text-secondary">{{ $cls->serie->nom ?? 'Général' }}</span>
+                                </div>
+                                <flux:badge color="blue">{{ $cls->inscriptions_count }} élève(s)</flux:badge>
+                            </div>
+                        @empty
+                            <p class="text-secondary text-sm text-center py-4">Aucune classe configurée.</p>
+                        @endforelse
                     </div>
                 </flux:card>
             </div>
             
-            <!-- Alerts & Events -->
+            <!-- Alerts & Gender breakdown -->
             <div>
-                <flux:card class="h-full">
-                    <h4 class="font-label-caps text-secondary mb-4 uppercase tracking-wider text-xs font-bold">Alertes & Agenda</h4>
+                <flux:card class="h-full space-y-6">
+                    <h4 class="font-label-caps text-secondary uppercase tracking-wider text-xs font-bold">Répartition & Démographie</h4>
                     
-                    <!-- High Priority Alert -->
-                    <div class="bg-error text-on-error p-4 rounded-xl shadow-sm mb-6 flex items-start gap-3">
-                        <flux:icon.exclamation-triangle class="size-5 text-on-error shrink-0" />
-                        <div>
-                            <p class="font-body-sm font-medium">3 professeurs absents ce matin</p>
-                            <a class="font-body-sm text-on-error/80 hover:text-on-error underline decoration-1 underline-offset-2 mt-1 inline-block" href="#">Voir les remplacements</a>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-purple-50 border border-purple-100 rounded-xl flex justify-between items-center">
+                            <div>
+                                <span class="text-xs font-bold text-purple-700 uppercase">Filles</span>
+                                <div class="text-2xl font-bold text-purple-900 mt-1">{{ $fillesCount ?? 0 }}</div>
+                            </div>
+                            <flux:icon.user class="size-8 text-purple-400" />
+                        </div>
+
+                        <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl flex justify-between items-center">
+                            <div>
+                                <span class="text-xs font-bold text-blue-700 uppercase">Garçons</span>
+                                <div class="text-2xl font-bold text-blue-900 mt-1">{{ $garconsCount ?? 0 }}</div>
+                            </div>
+                            <flux:icon.user class="size-8 text-blue-400" />
                         </div>
                     </div>
 
-                    <!-- Timeline -->
-                    <div class="relative pl-3 border-l-2 border-surface-variant space-y-6 ml-2">
-                        <!-- Event 1 -->
-                        <div class="relative">
-                            <div class="absolute -left-[19px] top-1 w-3 h-3 bg-surface-container-lowest border-2 border-primary rounded-full"></div>
-                            <div class="pl-4">
-                                <p class="font-body-sm text-primary font-medium">Conseil de classe 9ème A</p>
-                                <p class="font-body-sm text-secondary text-[12px] mt-0.5">Aujourd'hui, 14h00</p>
-                            </div>
-                        </div>
-                        <!-- Event 2 -->
-                        <div class="relative">
-                            <div class="absolute -left-[19px] top-1 w-3 h-3 bg-surface-container-lowest border-2 border-outline-variant rounded-full"></div>
-                            <div class="pl-4">
-                                <p class="font-body-sm text-primary font-medium">Date limite de paiement Tranche 2</p>
-                                <p class="font-body-sm text-secondary text-[12px] mt-0.5">Demain, Toute la journée</p>
-                            </div>
-                        </div>
+                    <div class="pt-4 border-t border-surface-variant">
+                        <h4 class="font-label-caps text-secondary uppercase tracking-wider text-xs font-bold mb-3">Accès Rapide Bulletins</h4>
+                        <a href="{{ route('admin.bulletins.index') }}" class="w-full p-3 bg-primary text-on-primary rounded-xl flex items-center justify-center gap-2 font-semibold text-sm hover:opacity-90 transition-opacity">
+                            <flux:icon.document-duplicate class="size-4" />
+                            Générer les Bulletins PDF
+                        </a>
                     </div>
                 </flux:card>
             </div>
